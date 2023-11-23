@@ -1,0 +1,8 @@
+.profile__info {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 336px;
+  align-self: center;
+  display: block;
+}

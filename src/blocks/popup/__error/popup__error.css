@@ -1,0 +1,9 @@
+.popup__error {
+  max-width: 358px;
+  margin: 5px 0 0;
+  color: #f00;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
