@@ -11,4 +11,3 @@ export function createCard(name, link) {
 
   return newHtmlElement;
 }
-
