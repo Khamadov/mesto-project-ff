@@ -1,7 +1,7 @@
 import "./pages/index.css";
 import { initialCards } from "./scripts/cards";
 import { openPopup, closePopup } from "./scripts/modal";
-import { createCard } from "./scripts/card";
+import { renderInitialCards, renderItem } from "./scripts/card";
 
 const formElement = document.querySelector(".popup__form");
 const nameInput = document.querySelector(".popup__input_type_name");
@@ -38,46 +38,15 @@ function openAddPopup() {
 openEditPopupButton.addEventListener("click", openEditPopup);
 openAddPopupButton.addEventListener("click", openAddPopup);
 
-const listElement = document.querySelector(".places__list");
 const imagePopup = document.querySelector(".popup_type_image");
 const addForm = addPopup.querySelector(".popup__form");
 const photoInput = addForm.querySelector(".popup__input_type_url");
 const placeInput = addForm.querySelector(".popup__input_type_card-name");
 
-function renderInitialCards(item) {
-  item.forEach(renderItem);
-}
-
-function renderItem(item) {
-  const newCard = createCard(item.name, item.link);
-  addListenersForItem(newCard, item);
-
-  listElement.prepend(newCard);
-}
 
 renderInitialCards(initialCards);
 
-function addListenersForItem(element, item) {
-  const addDeleteButton = element.querySelector(".card__delete-button");
-  addDeleteButton.addEventListener("click", handleDelete);
-
-  const addLikeButton = element.querySelector(".card__like-button");
-  addLikeButton.addEventListener("click", handleLike);
-
-  const showImage = element.querySelector(".card__image");
-  showImage.addEventListener("click", () => openImagePopup(item));
-}
-
-function handleDelete(event) {
-  const currentDelete = event.target.closest(".places__item");
-  currentDelete.remove();
-}
-
-function handleLike(event) {
-  event.target.classList.toggle("card__like-button_is-active");
-}
-
-function openImagePopup(item) {
+export function openImagePopup(item) {
   const image = imagePopup.querySelector(".popup__image");
   const subtitle = imagePopup.querySelector(".popup__caption");
   image.src = item.link;
