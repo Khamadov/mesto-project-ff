@@ -1,7 +1,14 @@
 import "./pages/index.css";
-import { initialCards } from "./scripts/cards";
 import { openPopup, closePopup, buttonClose } from "./scripts/modal";
 import { createCard } from "./scripts/card";
+import { clearValidation } from "./scripts/validation";
+import {
+  getProfileSerever,
+  getCardsServer,
+  editProfileServer,
+  addCardsServer,
+  editAvatarServer,
+} from "./scripts/api";
 
 const nameInput = document.querySelector(".popup__input_type_name");
 const jobInput = document.querySelector(".popup__input_type_description");
@@ -20,13 +27,29 @@ const placeInput = addForm.querySelector(".popup__input_type_card-name");
 const image = imagePopup.querySelector(".popup__image");
 const subtitle = imagePopup.querySelector(".popup__caption");
 const listElement = document.querySelector(".places__list");
+const avatarPopup = document.querySelector(".popup_type_avatar-edit");
+const avatarForm = avatarPopup.querySelector(".popup__form");
+const openAvatarPopupButton = document.querySelector(".profile__avatar-edit");
+const avatarImage = document.querySelector(".profile__image");
+const avatarInput = avatarForm.querySelector(".popup__input_type_url");
 
-function renderInitialCards(item) {
-  item.forEach(renderItem);
+
+getProfileSerever().then((data) => {
+  profileName.textContent = data.name;
+  profileJob.textContent = data.about;
+  avatarImage.style.backgroundImage = `url(${data.avatar})`;
+  
+  renderInitialCards(data._id);
+});
+
+function renderInitialCards(userId) {
+  getCardsServer().then((cards) => {
+    cards.forEach((item) => renderItem(item, userId));
+  });
 }
 
-function renderItem(item) {
-  const newCard = createCard(item, openImagePopup);
+function renderItem(item, ownerId) {
+  const newCard = createCard(item, openImagePopup, ownerId);
 
   listElement.prepend(newCard);
 }
@@ -34,40 +57,82 @@ function renderItem(item) {
 function handleFormSubmitEdit(evt) {
   evt.preventDefault();
 
-  profileName.textContent = nameInput.value;
-  profileJob.textContent = jobInput.value;
+  editForm.querySelector(".popup__button").textContent = "Сохранение...";
 
-  closePopup(editPopup);
+  editProfileServer({ name: nameInput.value, about: jobInput.value }).then(
+    (data) => {
+      profileName.textContent = data.name;
+      profileJob.textContent = data.about;
+      closePopup(editPopup);
+    }
+  );
 }
 
 function openEditPopup() {
   openPopup(editPopup);
+  clearValidation(editForm, validateConfig);
+
   nameInput.value = profileName.textContent;
   jobInput.value = profileJob.textContent;
 }
 
 function openAddPopup() {
   openPopup(addPopup);
-  addForm.reset();
+  clearValidation(addForm, validateConfig);
 }
 
 function openImagePopup(item) {
   image.src = item.link;
   image.alt = item.name;
   subtitle.textContent = item.name;
+
   openPopup(imagePopup);
+}
+
+
+function openAvatarPopup() {
+  openPopup(avatarPopup);
+  clearValidation(avatarForm, validateConfig);
+}
+
+function handleFormSubmitAvatar(evt) {
+  evt.preventDefault();
+  const avatarUrl = avatarInput.value;
+  avatarForm.querySelector(".popup__button").textContent = "Сохранение...";
+
+  editAvatarServer(avatarUrl).then((data) => {
+    avatarImage.style.backgroundImage = `url(${data.avatar})`;
+    closePopup(avatarPopup);
+  });
 }
 
 function handleFormSubmitAdd(evt) {
   evt.preventDefault();
-  renderItem({ name: placeInput.value, link: photoInput.value });
-  closePopup(addPopup);
+
+  addForm.querySelector(".popup__button").textContent = "Сохранение...";
+
+  addCardsServer({ name: placeInput.value, link: photoInput.value }).then(
+    (card) => {
+      renderItem(card);
+      closePopup(addPopup);
+    }
+  );
 }
 
 editForm.addEventListener("submit", handleFormSubmitEdit);
 addForm.addEventListener("submit", handleFormSubmitAdd);
+avatarForm.addEventListener("submit", handleFormSubmitAvatar);
 openEditPopupButton.addEventListener("click", openEditPopup);
 openAddPopupButton.addEventListener("click", openAddPopup);
+openAvatarPopupButton.addEventListener("click", openAvatarPopup);
 
-renderInitialCards(initialCards);
+const validateConfig = {
+  formSelector: ".popup__form",
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".popup__button",
+  inactiveButtonClass: "popup__button_disabled",
+  inputErrorClass: "popup__input_type_error",
+  errorClass: "popup__error_visible",
+};
+
 buttonClose(buttonClosePopup);
