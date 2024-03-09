@@ -1,4 +1,3 @@
-
 function showError(formElement, inputElement, errorMassage, config) {
   const formError = formElement.querySelector(`#${inputElement.name}-error`);
 
@@ -49,7 +48,7 @@ function setEventListeners(formElement, config) {
   });
 }
 
-function enableValidation(config) {
+export function enableValidation(config) {
   const formList = Array.from(document.querySelectorAll(config.formSelector));
 
   formList.forEach((formElement) => {
@@ -74,6 +73,22 @@ function toggleButtonState(inputList, buttonElement, config) {
 }
 
 export function clearValidation(form, validationConfig) {
-form.reset();
-enableValidation(validationConfig)
+  form.reset();
+  const inputList = Array.from(
+    form.querySelectorAll(validationConfig.inputSelector)
+  );
+  const submitButton = form.querySelector(
+    validationConfig.submitButtonSelector
+  );
+
+  inputList.forEach((input) => {
+    hideError(form, input, validationConfig);
+  });
+
+  disableSubmitButton(submitButton, validationConfig.inactiveButtonClass);
+}
+
+function disableSubmitButton(buttonElement, inactiveButtonClass) {
+  buttonElement.disabled = true;
+  buttonElement.classList.add(inactiveButtonClass);
 }

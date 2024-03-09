@@ -6,21 +6,21 @@ const apiConfig = {
   },
 };
 
-//Загрузка информации о пользователе с сервера 
+//Загрузка информации о пользователе с сервера
 export function getProfileSerever() {
   return fetch(`${apiConfig.url}/users/me`, {
     headers: apiConfig.headers,
   }).then(handleResponse);
 }
 
-//Загрузка карточек с сервера 
+//Загрузка карточек с сервера
 export function getCardsServer() {
   return fetch(`${apiConfig.url}/cards`, {
     headers: apiConfig.headers,
   }).then(handleResponse);
 }
 
-//Редактирование профиля 
+//Редактирование профиля
 export function editProfileServer(data) {
   return fetch(`${apiConfig.url}/users/me`, {
     method: "PATCH",
@@ -32,7 +32,7 @@ export function editProfileServer(data) {
   }).then(handleResponse);
 }
 
-//Добавление новой карточки 
+//Добавление новой карточки
 export function addCardsServer(newCard) {
   return fetch(`${apiConfig.url}/cards`, {
     method: "POST",
@@ -44,7 +44,7 @@ export function addCardsServer(newCard) {
   }).then(handleResponse);
 }
 
-//Удаление карточки 
+//Удаление карточки
 export function deleteCardServer(cardId) {
   return fetch(`${apiConfig.url}/cards/${cardId}`, {
     method: "DELETE",
@@ -52,7 +52,7 @@ export function deleteCardServer(cardId) {
   }).then(handleResponse);
 }
 
-//Удаление лайка 
+//Удаление лайка
 export function deleteLikeServer(cardId) {
   return fetch(`${apiConfig.url}/cards/likes/${cardId}`, {
     method: "DELETE",
@@ -60,7 +60,7 @@ export function deleteLikeServer(cardId) {
   }).then(handleResponse);
 }
 
-//Добавление лайка 
+//Добавление лайка
 export function addLikeServer(cardId) {
   return fetch(`${apiConfig.url}/cards/likes/${cardId}`, {
     method: "PUT",
@@ -68,14 +68,13 @@ export function addLikeServer(cardId) {
   }).then(handleResponse);
 }
 
-//Обновление аватара пользователя 
-
+//Обновление аватара пользователя
 export function editAvatarServer(url) {
   return fetch(`${apiConfig.url}/users/me/avatar`, {
     method: "PATCH",
     headers: apiConfig.headers,
     body: JSON.stringify({
-      avatar: url
+      avatar: url,
     }),
   }).then(handleResponse);
 }

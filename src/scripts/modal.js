@@ -3,8 +3,8 @@ export function openPopup(open) {
   open.classList.add("popup_is-opened");
 }
 
-export function buttonClose(button) {
-  button.forEach((btn) => {
+export function setCloseHandlers(buttons) {
+  buttons.forEach((btn) => {
     const popup = btn.closest(".popup");
     popup.addEventListener("click", closePopupOverlay);
     btn.addEventListener("click", () => closePopup(popup));
